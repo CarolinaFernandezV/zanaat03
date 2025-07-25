@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login de Empleados</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+   
+  <h1>Sistema de Empleados</h1>
+
+  <div class="container">
+    <h2>Crear Cuenta (Administrador)</h2>
+    <input type="text" id="nombre" placeholder="Nombre">
+    <input type="text" id="apellido" placeholder="Apellido">
+    <input type="text" id="numero" placeholder="Número de empleado">
+   <select id="puesto">
+        <option value="BD">Programador BD</option>
+        <option value="FrontEnd">FrontEnd</option>
+        <option value="BackEnd">BackEnd</option>
+        <option value="Marketing">Marketing</option>
+        <option value="Administrador">Administrador</option>
+</select>
+
+    <button onclick="registrarUsuario()">Registrar Usuario</button>
+    <p id="registroMensaje"></p>
+  </div>
+
+  <div class="container">
+    <h2>Iniciar Sesión</h2>
+    <input type="text" id="loginNumero" placeholder="Número de empleado">
+    <input type="password" id="loginPass" placeholder="Contraseña">
+    <button onclick="iniciarSesion()">Iniciar Sesión</button>
+    <p id="loginMensaje"></p>
+  </div>
+
+  <div class="container" id="adminPanel" style="display:none;">
+    <h2>Panel de Administración</h2>
+    <div id="listaUsuarios"></div>
+  </div>
+
+   <script src="scprit_admin.ts">
+  
+</script>
+</body>
+</html>

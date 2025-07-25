@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema de Empleados</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .container {
+      background-color: white;
+      padding: 20px;
+      margin: 15px auto;
+      width: 350px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+    }
+
+    input, select {
+      display: block;
+      width: 90%;
+      margin: 10px auto;
+      padding: 8px;
+    }
+
+    #panelEmpleado, #panelAdmin {
+      display: none;
+    }
+
+    button {
+      padding: 8px 16px;
+      margin-top: 10px;
+    }
+
+    hr {
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sistema de Empleados</h1>
+
+  <!-- Registro -->
+  <div class="container" id="registro">
+    <h2>Crear Cuenta (Administrador)</h2>
+    <input type="text" id="nombre" placeholder="Nombre">
+    <input type="text" id="apellido" placeholder="Apellido">
+    <input type="text" id="numero" placeholder="Número de empleado">
+    <select id="puesto">
+      <option value="BD">Programador BD</option>
+      <option value="FrontEnd">FrontEnd</option>
+      <option value="BackEnd">BackEnd</option>
+      <option value="Marketing">Marketing</option>
+      <option value="Administrador">Administrador</option>
+    </select>
+    <button onclick="registrarUsuario()">Registrar Usuario</button>
+    <p id="registroMensaje"></p>
+  </div>
+
+  <hr>
+
+  <!-- Login -->
+  <div class="container" id="login">
+    <h2>Iniciar Sesión</h2>
+    <input type="text" id="loginNumero" placeholder="Número de empleado">
+    <input type="password" id="loginPass" placeholder="Contraseña">
+    <button onclick="iniciarSesion()">Iniciar Sesión</button>
+    <p id="loginMensaje"></p>
+  </div>
+
+  <!-- Panel Empleado -->
+  <div class="container" id="panelEmpleado">
+    <h2 id="mensajeEmpleado">Usuario registrado</h2>
+    <button onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+
+  <!-- Panel Administrador -->
+  <div class="container" id="panelAdmin">
+    <h2>Sesión iniciada como administrador</h2>
+    <div id="listaUsuarios"></div>
+    <button onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+
+  <script>
+    let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+    function registrarUsuario() {
+      const nombre = document.getElementById('nombre').value.trim();
+      const apellido = document.getElementById('apellido').value.trim();
+      const numero = document.getElementById('numero').value.trim();
+      const puesto = document.getElementById('puesto').value;
+
+      if (!nombre || !apellido || !numero || !puesto) {
+        alert("Por favor completa todos los campos.");
+        return;
+      }
+
+      const existe = usuarios.find(u => u.numero === numero);
+      if (existe) {
+        alert("Este número de empleado ya está registrado.");
+        return;
+      }
+
+      usuarios.push({
+        nombre,
+        apellido,
+        numero,
+        puesto,
+        contraseña: "1234"
+      });
+
+      localStorage.setItem('usuarios', JSON.stringify(usuarios));
+      mostrarPanelEmpleado("Usuario registrado");
+    }
+
+    function iniciarSesion() {
+      const numero = document.getElementById('loginNumero').value.trim();
+      const pass = document.getElementById('loginPass').value.trim();
+
+      const user = usuarios.find(u => u.numero === numero && u.contraseña === pass);
+
+      if (user) {
+        if (user.puesto === "Administrador") {
+          mostrarPanelAdmin();
+        } else {
+          mostrarPanelEmpleado("Sesión iniciada");
+        }
+      } else {
+        document.getElementById('loginMensaje').textContent = "Credenciales incorrectas.";
+      }
+    }
+
+    function mostrarPanelEmpleado(mensaje) {
+      document.getElementById('registro').style.display = 'none';
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('panelEmpleado').style.display = 'block';
+      document.getElementById('mensajeEmpleado').textContent = mensaje;
+    }
+
+    function mostrarPanelAdmin() {
+      document.getElementById('registro').style.display = 'none';
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('panelAdmin').style.display = 'block';
+
+      const lista = document.getElementById('listaUsuarios');
+      lista.innerHTML = '';
+      usuarios.forEach(u => {
+        lista.innerHTML += `<p><strong>${u.nombre} ${u.apellido}</strong> - ${u.puesto} - ${u.numero}</p>`;
+      });
+    }
+
+    function cerrarSesion() {
+      location.reload();
+    }
+  </script>
+</body>
+</html>
